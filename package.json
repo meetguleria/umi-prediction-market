@@ -10,11 +10,16 @@
   "license": "ISC",
   "description": "",
   "devDependencies": {
-    "@nomiclabs/hardhat-waffle": "^2.0.6",
-    "chai": "^5.2.0",
+    "@nomicfoundation/hardhat-chai-matchers": "^2.0.9",
+    "@nomicfoundation/hardhat-ethers": "^3.0.9",
+    "@types/node": "^24.0.13",
+    "chai": "^4.3.7",
     "dotenv": "^17.0.1",
-    "ethereum-waffle": "^4.0.10",
-    "ethers": "^5.8.0",
-    "hardhat": "^2.25.0"
+    "ethers": "^6.15.0",
+    "hardhat": "^2.25.0",
+    "hardhat-gas-reporter": "^2.3.0",
+    "solidity-coverage": "^0.8.16",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.8.3"
   }
 }
