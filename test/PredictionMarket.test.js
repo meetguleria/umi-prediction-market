@@ -1,6 +1,5 @@
 const { expect } = require("chai");
 const { ethers } = require("hardhat");
-const { describe } = require("node:test");
 
 describe("PredictionMarket", function () {
   let market;
@@ -100,5 +99,78 @@ describe("PredictionMarket", function () {
       expect(downStake).to.equal(0n);
       expect(hasClaimed).to.be.false;
     });
+
+    it("reverts when stake is below MIN_STAKE", async function () {
+      const tinyStake = ethers.parseEther("0.001");
+      await expect(
+        market.connect(bob).buyShares(0, 1, { value: tinyStake })
+      ).to.be.revertedWith("Bet below minimum stake");
+    });
+
+    it("reverts when the market ID does not exist", async function () {
+      const stake = ethers.parseEther("1.0");
+      await expect(
+        market.connect(alice).buyShares(999, 2, { value: stake })
+      ).to.be.revertedWith("Market does not exist");
+    });
   })
+
+  describe("resolveMarket()", function () {
+    let asset, referencePrice, question, endTime;
+
+    beforeEach(async function () {
+      // Create a market as owner
+      asset = ethers.encodeBytes32String("ETHUSDT");
+      referencePrice = ethers.parseUnits("2000", 8);
+      question = "ETH >= $2000 in 1h?";
+      const nowBlock = await ethers.provider.getBlock("latest");
+      const now = nowBlock.timestamp;
+      endTime = now + 3600;
+      await market.createMarket(asset, referencePrice, question, endTime);
+
+      // Fast Forward time past endTime
+      await ethers.provider.send("evm_increaseTime", [3601]);
+      await ethers.provider.send("evm_mine", []);
+    });
+
+    it("resolves to Up when finalPrice >= referencePrice",
+      async function () {
+        const priceUp = referencePrice + 1n;
+        await expect(
+          market.resolveMarket(0, priceUp)
+        )
+          .to.emit(market, "MarketResolved")
+          .withArgs(0, 1, /* Outcome.Up */ priceUp);
+        const m = await market.getMarket(0);
+        expect(m.resolved).to.be.true;
+        expect(m.outcome).to.equal(1); // Up
+      });
+
+    it("resolves to Down when finalPrice < referencePrice",
+      async function () {
+        const priceDown = referencePrice - 1n;
+        await expect(
+          market.resolveMarket(0, priceDown)
+        )
+          .to.emit(market, "MarketResolved")
+          .withArgs(0, 2, priceDown);
+
+        const m = await market.getMarket(0);
+        expect(m.resolved).to.be.true;
+        expect(m.outcome).to.equal(2); // Down
+      });
+    it("resolves to Up when finalPrice equals referencePrice",
+      async function () {
+        const priceEqual = referencePrice;
+        await expect(
+          market.resolveMarket(0, priceEqual)
+        )
+          .to.emit(market, "MarketResolved")
+          .withArgs(0, 1, priceEqual);
+
+        const m = await market.getMarket(0);
+        expect(m.resolved).to.be.true;
+        expect(m.outcome).to.equal(1); // Up on tie
+    });
+  });
 });

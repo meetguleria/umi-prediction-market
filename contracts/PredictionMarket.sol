@@ -139,7 +139,7 @@ contract PredictionMarket {
     require(!m.resolved, "Market already resolved");
 
     // Determine and store Outcome
-    if (finalPrice > m.referencePrice) {
+    if (finalPrice >= m.referencePrice) {
       m.outcome = Outcome.Up;
     } else {
       m.outcome = Outcome.Down;
