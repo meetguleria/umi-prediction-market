@@ -1,7 +1,30 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.28;
 
-  /// @notice Emitted when shares are purchased in a market
+contract PredictionMarket {
+
+  // Owner for admin-only functions
+  address public owner;
+
+  /// @dev Restricts function to contract owner
+  modifier onlyOwner() {
+    require(msg.sender == owner, "Only Owner");
+    _;
+  }
+
+  /// @dev Reverts if the given marketId has not been created
+  modifier marketExists(uint256 marketId) {
+    require(marketId < marketCount, "Market does not exist");
+    _;
+  }
+  /// @dev Set deployer as owner
+  constructor() {
+    owner = msg.sender;
+  }
+
+  enum Outcome { Unresolved, Up, Down }
+
+      /// @notice Emitted when shares are purchased in a market
   event SharesPurchased(uint256 indexed marketId, address indexed user, Outcome side, uint256 amount);
 
   /// @notice Emitted when a market is resolved
@@ -26,27 +49,6 @@ pragma solidity ^0.8.28;
   /// @notice Emitted when the platform owner withdraws accrued platform fees
   event PlatformFeesWithdrawn(address indexed owner, uint256 amount);
 
-contract PredictionMarket {
-  // Owner for admin-only functions
-  address public owner;
-
-  /// @dev Restricts function to contract owner
-  modifier onlyOwner() {
-    require(msg.sender == owner, "Only Owner");
-    _;
-  }
-
-  /// @dev Reverts if the given marketId has not been created
-  modifier marketExists(uint256 marketId) {
-    require(marketId < marketCount, "Market does not exist");
-    _;
-  }
-  /// @dev Set deployer as owner
-  constructor() {
-    owner = msg.sender;
-  }
-
-  enum Outcome { Unresolved, Up, Down }
   struct Market {
     address creator;
     bytes32 asset;
@@ -211,7 +213,7 @@ contract PredictionMarket {
   external
   view
   marketExists(marketId)
-  return (
+  returns (
     address creator,
     bytes32 asset,
     uint256 referencePrice,
@@ -244,15 +246,16 @@ contract PredictionMarket {
     external
     view
     marketExists(marketId)
-    return (
+    returns (
       uint256 upStake,
       uint256 downStake,
       bool hasClaimed
     )
   {
     Market storage m = markets[marketId];
-    upStake = m.upStake[user];
-    downStake = m.downStake[user];
+    upStake = m.upStakes[user];
+    downStake = m.downStakes[user];
     hasClaimed = m.claimed[user];
+    return (upStake, downStake, hasClaimed);
   }
 }

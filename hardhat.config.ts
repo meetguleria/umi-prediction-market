@@ -3,6 +3,7 @@ import "@nomicfoundation/hardhat-ethers";
 import "@nomicfoundation/hardhat-chai-matchers";
 import "solidity-coverage";
 import "hardhat-gas-reporter";
+import "dotenv/config";
 
 const config: HardhatUserConfig = {
   solidity: "0.8.28",
