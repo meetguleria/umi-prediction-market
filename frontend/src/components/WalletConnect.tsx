@@ -1,7 +1,7 @@
 "use client";
 
 import { useAccount, useConnect, useDisconnect } from "wagmi";
-import { Button } from "@/ui/button";
+import { Button } from "@ui/button";
 
 export default function WalletConnect() {
   const { address } = useAccount();

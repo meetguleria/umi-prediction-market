@@ -1,7 +1,7 @@
 "use client";
 import Link from "next/link";
 import Image from "next/image";
-import { ModeToggle } from "@/components/ModeToggle";
+import ModeToggle from "@/components/ModeToggle";
 import ConnectButton from "@/components/WalletConnect";
 
 export default function Navbar() {
