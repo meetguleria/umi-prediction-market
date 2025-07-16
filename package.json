@@ -1,9 +1,17 @@
 {
   "name": "umi-prediction-market",
   "version": "1.0.0",
-  "main": "index.js",
+  "private": true,
+  "workspaces": [
+    "frontend",
+    "."
+  ],
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "dev:frontend": "npm --workspace frontend run dev",
+    "build:frontend": "npm --workspace frontend run build",
+    "start:frontend": "npm --workspace frontend run start",
+    "dev:contracts": "npx hardhat node",
+    "test:contracts": "npx hardhat test"
   },
   "keywords": [],
   "author": "",
