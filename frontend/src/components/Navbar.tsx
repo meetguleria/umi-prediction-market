@@ -13,7 +13,7 @@ export default function Navbar() {
           <Link href="/" className="flex items-center space-x-2">
             <Image src="/logo.svg" alt="UmiMarket Logo" width={32} height={32} />
             <span className="text-2xl font-semibold text-gray-900 dark:text-white">
-              UmiMarket
+              PredictMI
             </span>
           </Link>
 

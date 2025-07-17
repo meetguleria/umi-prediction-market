@@ -1,5 +1,4 @@
 "use client";
-
 import { useAccount, useConnect, useDisconnect } from "wagmi";
 import { Button } from "@ui/button";
 
@@ -15,7 +14,7 @@ export default function WalletConnect() {
       </Button>
     );
   }
-  
+
   return (
     <Button onClick={() => connect({ connector: connectors[0] })}>
       Connect Wallet

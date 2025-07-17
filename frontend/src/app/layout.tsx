@@ -13,6 +13,7 @@ const geistMono = Geist_Mono({
 });
 
 import Navbar from "@/components/Navbar";
+import WagmiProvider from "@/components/WagmiProvider";
 
 export const metadata: Metadata = {
   title: "PredictMI",
@@ -26,11 +27,11 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-      >
-        <Navbar />
-        {children}
+      <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
+        <WagmiProvider>
+          <Navbar />
+          {children}
+        </WagmiProvider>
       </body>
     </html>
   );
