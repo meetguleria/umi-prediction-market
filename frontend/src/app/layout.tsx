@@ -12,6 +12,7 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
+import Providers from "@/components/Providers";
 import Navbar from "@/components/Navbar";
 import WagmiProvider from "@/components/WagmiProvider";
 
@@ -29,8 +30,10 @@ export default function RootLayout({
     <html lang="en">
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
         <WagmiProvider>
-          <Navbar />
-          {children}
+          <Providers>
+            <Navbar />
+            {children}
+          </Providers>
         </WagmiProvider>
       </body>
     </html>
